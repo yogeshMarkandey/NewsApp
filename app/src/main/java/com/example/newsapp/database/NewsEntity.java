@@ -3,6 +3,8 @@ package com.example.newsapp.database;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.util.Date;
+
 @Entity(tableName = "news_table")
 public class NewsEntity {
 
@@ -16,6 +18,7 @@ public class NewsEntity {
     private String imagesUrl;
     private String date;
     private String category;
+    private Date timestamp;
 
     public NewsEntity() {
         //Empty constructor
@@ -42,6 +45,15 @@ public class NewsEntity {
     }
 
     // Getter and Setters
+
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
+    }
+
     public String getNewsId() {
         return newsId;
     }

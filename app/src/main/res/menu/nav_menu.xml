@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+    <group
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/menu_important"
+            android:title="Important"
+            android:icon="@drawable/ic_baseline_star_24"
+            />
+        <item
+            android:id="@+id/menu_search"
+            android:title="Filter"
+            android:icon="@drawable/ic_baseline_star_24"
+            />
+        <item
+            android:id="@+id/menu_favorites"
+            android:title="Task 2"
+            android:icon="@drawable/ic_baseline_star_24"
+            />
+    </group>
+
+    <item
+        android:title="Communicate">
+        <menu>
+            <item
+                android:id="@+id/menu_send"
+                android:title="Send"
+                android:icon="@drawable/ic_baseline_star_24"
+                />
+            <item
+                android:id="@+id/menu_share"
+                android:title="Share"
+                android:icon="@drawable/ic_baseline_star_24"
+                />
+        </menu>
+    </item>
+
+
+</menu>
