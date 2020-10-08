@@ -12,8 +12,8 @@
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/text_view_name_nag_header"
-        app:layout_constraintStart_toStartOf="@+id/text_view_name_nag_header"
+        app:layout_constraintBottom_toTopOf="@+id/text_view_name_nav_header"
+        app:layout_constraintStart_toStartOf="@+id/text_view_name_nav_header"
         android:src="@mipmap/ic_launcher_round"
         tools:src="@mipmap/ic_launcher_round" />
 
@@ -28,12 +28,23 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/text_view_name_nag_header"
+        android:id="@+id/text_view_name_nav_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:text="Name here"
         app:layout_constraintBottom_toTopOf="@+id/text_view_email_nav_header"
         app:layout_constraintStart_toStartOf="@+id/text_view_email_nav_header" />
+
+    <ImageView
+        android:id="@+id/image_view_sign_in"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="108dp"
+        android:layout_marginEnd="40dp"
+        android:src="@mipmap/ic_launcher_round"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

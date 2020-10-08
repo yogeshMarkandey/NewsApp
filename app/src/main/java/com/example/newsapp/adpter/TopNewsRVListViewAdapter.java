@@ -20,8 +20,8 @@ import com.example.newsapp.data.NewsData;
 import java.util.List;
 
 
-public class NewsRVListViewAdapter
-        extends ListAdapter<NewsData, NewsRVListViewAdapter.NewsViewHolder> {
+public class TopNewsRVListViewAdapter
+        extends ListAdapter<NewsData, TopNewsRVListViewAdapter.NewsViewHolder> {
 
     private Context context;
     private OnCardTapListener listener;
@@ -39,7 +39,7 @@ public class NewsRVListViewAdapter
         }
     };
 
-    public NewsRVListViewAdapter(Context context, OnCardTapListener listener) {
+    public TopNewsRVListViewAdapter(Context context, OnCardTapListener listener) {
         super(DIFF_CALLBACK);
         this.context = context;
         this.listener = listener;
@@ -50,7 +50,7 @@ public class NewsRVListViewAdapter
     public NewsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v= LayoutInflater
                 .from(parent.getContext())
-                .inflate(R.layout.item_rv_main, parent, false);
+                .inflate(R.layout.item_top_highlights, parent, false);
         return new NewsViewHolder(v, listener);
     }
 
@@ -85,13 +85,12 @@ public class NewsRVListViewAdapter
         public NewsViewHolder(@NonNull View itemView, OnCardTapListener listener) {
             super(itemView);
             this.listener = listener;
-            headingTv = itemView.findViewById(R.id.textView_heading );
-            bodyTv = itemView.findViewById(R.id.textView_news );
-            imageView = itemView.findViewById(R.id.imageView );
-            starImageView = itemView.findViewById(R.id.imageView_star );
+            headingTv = itemView.findViewById(R.id.textView_heading_top_news );
+            bodyTv = itemView.findViewById(R.id.body_item_top_news );
+            imageView = itemView.findViewById(R.id.imageView_top_news );
+
 
             itemView.setOnClickListener(this);
-            starImageView.setOnClickListener(this);
 
         }
 
@@ -99,17 +98,17 @@ public class NewsRVListViewAdapter
         public void onClick(View view) {
             switch (view.getId()){
                 case R.id.imageView_star:
-                    listener.onStarClicked(getItemAtPosition(getAdapterPosition()));
+                    //listener.onStarClicked(getItemAtPosition(getAdapterPosition()));
                     break;
                 default:
-                    listener.onCardTaped(getCurrentList(), getAdapterPosition());
+                    listener.onCardTaped(getAdapterPosition(), getCurrentList());
                     break;
             }
         }
     }
 
     public interface OnCardTapListener{
-        void onStarClicked(NewsData data);
-        void onCardTaped(List<NewsData> list, int position);
+        void onCardTaped(int position, List<NewsData> list);
+
     }
 }

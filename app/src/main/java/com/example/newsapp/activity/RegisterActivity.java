@@ -2,6 +2,7 @@ package com.example.newsapp.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 
 import com.example.newsapp.R;
 import com.example.newsapp.data.UserData;
+import com.example.newsapp.viewmodel.MainViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -28,7 +30,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private static final String TAG = "RegistrationActivity";
 
-    public static final String USERS_DATABASE = "User Database";
+
     //widget
     private EditText ev_email, ev_password;
     private Button b_register, b_sign_in;
@@ -38,11 +40,15 @@ public class RegisterActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
     private FirebaseFirestore firebaseFirestore;
+    private MainViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+        viewModel = new ViewModelProvider(this).get(MainViewModel.class);
+
         // initialising Widgets
         ev_email = findViewById(R.id.ev_email_registration);
         ev_password = findViewById(R.id.ev_password_register);
@@ -58,7 +64,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 progressBar.setVisibility(View.VISIBLE);
-                String email = ev_email.getText().toString();
+                final String email = ev_email.getText().toString();
                 String password = ev_password.getText().toString();
                 if(email.isEmpty()){
                     ev_email.setError("Please Enter Email Id!");
@@ -86,19 +92,15 @@ public class RegisterActivity extends AppCompatActivity {
                             if(!task.isSuccessful()){
                                 toastMessage("SignUp Unsuccessful, Please try again.");
                             }else{
-
-                                String uId = firebaseAuth.getCurrentUser().getUid().toString();
-                                saveUserDataInFirestore(uId);
-
-                                toastMessage("SignUp Successful.");
+                                viewModel.sendEmailVerificationLink();
+                                String uId = firebaseAuth.getCurrentUser().getUid();
+                                String emailU = firebaseAuth.getCurrentUser().getEmail();
+                                viewModel.saveUserDataOnDatabase(uId , emailU);
                                 Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
                                 startActivity(intent);
-
-
                             }
                         }
                     });
-
                 }else{
                     toastMessage("Error occurred!");
                 }
@@ -109,12 +111,9 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 progressBar.setVisibility(View.VISIBLE);
-
                 Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
                 startActivity(intent);
-
                 progressBar.setVisibility(View.GONE);
-
             }
         });
     }
@@ -123,27 +122,7 @@ public class RegisterActivity extends AppCompatActivity {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
-    private void saveUserDataInFirestore(String uId){
-        String email = ev_email.getText().toString().trim();
-        UserData userDetails = new UserData();
-        userDetails.setEmailId(email);
-        userDetails.setuId(uId);
-        userDetails.setUserName(email.substring(0, email.indexOf('@')));
 
-        firebaseFirestore = FirebaseFirestore.getInstance();
 
-        firebaseFirestore.collection(USERS_DATABASE)
-                .add(userDetails).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-            @Override
-            public void onSuccess(DocumentReference documentReference) {
-                Log.d(TAG, "onSuccess: Data stored successfull.");
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d(TAG, e.getMessage());
-            }
-        });
 
-    }
 }

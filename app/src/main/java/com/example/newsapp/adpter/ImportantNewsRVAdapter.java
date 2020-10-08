@@ -49,7 +49,7 @@ public class ImportantNewsRVAdapter
     public NewsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v= LayoutInflater
                 .from(parent.getContext())
-                .inflate(R.layout.item_rv_main, parent, false);
+                .inflate(R.layout.item_important_rv, parent, false);
         return new NewsViewHolder(v, listener);
     }
 
@@ -79,19 +79,16 @@ public class ImportantNewsRVAdapter
     public class NewsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         TextView headingTv, bodyTv;
-        ImageView starImageView, imageView;
+        ImageView imageView;
         OnCardTapListener listener;
         public NewsViewHolder(@NonNull View itemView, OnCardTapListener listener) {
             super(itemView);
             this.listener = listener;
-            headingTv = itemView.findViewById(R.id.textView_heading );
-            bodyTv = itemView.findViewById(R.id.textView_news );
-            imageView = itemView.findViewById(R.id.imageView );
-            starImageView = itemView.findViewById(R.id.imageView_star );
+            headingTv = itemView.findViewById(R.id.textView_heading_item_imp );
+            bodyTv = itemView.findViewById(R.id.textView_body_item_imp );
+            imageView = itemView.findViewById(R.id.imageView_news_item_imp );
 
             itemView.setOnClickListener(this);
-            starImageView.setOnClickListener(this);
-
         }
 
         @Override
@@ -101,7 +98,7 @@ public class ImportantNewsRVAdapter
                     listener.onStarClicked(getItemAtPosition(getAdapterPosition()));
                     break;
                 default:
-                    listener.onCardTaped(getItemAtPosition(getAdapterPosition()));
+                    listener.onCardTaped(getAdapterPosition());
                     break;
             }
         }
@@ -109,6 +106,6 @@ public class ImportantNewsRVAdapter
 
     public interface OnCardTapListener{
         void onStarClicked(NewsEntity data);
-        void onCardTaped(NewsEntity data);
+        void onCardTaped(int position);
     }
 }

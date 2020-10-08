@@ -1,9 +1,12 @@
 package com.example.newsapp.activity;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
@@ -33,14 +36,19 @@ public class ImportantNews extends AppCompatActivity implements ImportantNewsRVA
 
         recyclerView = findViewById(R.id.re_important_news);
         adapter = new ImportantNewsRVAdapter(getApplicationContext(),this );
-        GridLayoutManager manager = new GridLayoutManager(getApplicationContext(),2);
+        LinearLayoutManager manager = new LinearLayoutManager(getApplicationContext());
+
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(manager);
         recyclerView.setHasFixedSize(true);
 
+        //for handling the swipe to delete feature..
+        ItemTouchHelper helper = new ItemTouchHelper(callback);
+        helper.attachToRecyclerView(recyclerView);
+
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
-        viewModel.getAllNotes().observe(this, new Observer<List<NewsEntity>>() {
+        viewModel.getAllNotes().observe(ImportantNews.this, new Observer<List<NewsEntity>>() {
             @Override
             public void onChanged(List<NewsEntity> newsEntities) {
                 adapter.submitList(newsEntities);
@@ -55,7 +63,24 @@ public class ImportantNews extends AppCompatActivity implements ImportantNewsRVA
     }
 
     @Override
-    public void onCardTaped(NewsEntity data) {
+    public void onCardTaped(int position) {
         Toast.makeText(this, "Tapped on card", Toast.LENGTH_SHORT).show();
     }
+
+    ItemTouchHelper.SimpleCallback callback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            if(direction == ItemTouchHelper.RIGHT){
+                int position = viewHolder.getAdapterPosition();
+                NewsEntity entity = adapter.getItemAtPosition(position);
+                viewModel.delete(entity);
+                Toast.makeText(getApplicationContext(), "Deleted", Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
 }
